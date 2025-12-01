@@ -67,6 +67,8 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
             alert("✅ Registrasi Berhasil! Silakan Login.");
             window.location.href = 'index.html'; // Pindah ke Login
         } else {
+
+            const pesanError = result.message || result.error || "Gagal mendaftar (Error tidak diketahui)";
             // GAGAL (Misal: Username sudah dipakai)
             if (result.message.includes("Username")) {
                 showError(usernameInput, usernameError, result.message);
