@@ -1,5 +1,5 @@
 // --- KONFIGURASI ---
-// GANTI DENGAN LINK NGROK KAMU YANG BARU:
+// Pastikan link ini sama persis dengan yang ada di terminal Ngrok kamu
 const API_URL = "https://bonnily-profanatory-jordynn.ngrok-free.dev"; 
 
 // 1. CEK LOGIN
@@ -22,14 +22,11 @@ let markers = {};
 
 // --- FUNGSI TAMPILKAN LIST ---
 function addToList(data) {
-    // Bersihkan pesan kosong
     const emptyMsg = coordinateList.querySelector('p');
     if (emptyMsg) emptyMsg.remove();
 
-    // Cek apakah item sudah ada? Kalau ada, kita update isinya saja (biar ga dobel)
     let item = document.getElementById(`item-${data.id}`);
     
-    // HTML Konten List
     const contentHTML = `
         <div>
             <strong id="nama-${data.id}">${data.nama}</strong><br>
@@ -46,10 +43,8 @@ function addToList(data) {
     `;
 
     if (item) {
-        // Update item lama
         item.innerHTML = contentHTML;
     } else {
-        // Buat item baru
         item = document.createElement("div");
         item.classList.add("coord-item");
         item.id = `item-${data.id}`;
@@ -58,67 +53,40 @@ function addToList(data) {
     }
 }
 
-// --- FUNGSI TAMBAH MARKER KE PETA (DRAGGABLE) ---
+// --- FUNGSI TAMBAH MARKER (DRAGGABLE) ---
 function addMarkerToMap(data) {
-    // 1. Buat Marker dengan opsi draggable: true
     const marker = L.marker([data.latitude, data.longitude], {
-        draggable: true, // <--- INI KUNCINYA BIAR BISA DIGESER
+        draggable: true,
         autoPan: true
     })
     .addTo(map)
     .bindPopup(`<b>${data.nama}</b><br><small>Geser untuk pindah</small>`);
 
-    // 2. Event Listener: Saat marker selesai digeser (dragend)
+    // Event saat marker digeser
     marker.on('dragend', function(event) {
         const marker = event.target;
         const position = marker.getLatLng();
-        
-        // Update koordinat di Database
         updatePosisiMarker(data.id, position.lat, position.lng);
-        
-        // Update koordinat di Marker Popup
         marker.setPopupContent(`<b>${document.getElementById(`nama-${data.id}`).innerText}</b><br><small>Menyimpan posisi baru...</small>`);
     });
 
-    // Simpan di memori browser
     markers[data.id] = marker;
 }
 
-// --- FUNGSI UPDATE POSISI (Backend) ---
-async function updatePosisiMarker(id, lat, lng) {
-    try {
-        const response = await fetch(`${API_URL}/api/map/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ latitude: lat, longitude: lng })
-        });
-
-        if (response.ok) {
-            // Update Teks di List Panel Kiri secara Realtime
-            const posSpan = document.getElementById(`pos-${id}`);
-            if(posSpan) {
-                posSpan.innerHTML = `Lat: ${lat.toFixed(5)}<br>Lng: ${lng.toFixed(5)}`;
-            }
-            
-            // Update Popup supaya user tau sudah tersimpan
-            const marker = markers[id];
-            const nama = document.getElementById(`nama-${id}`).innerText;
-            marker.setPopupContent(`<b>${nama}</b><br>Lat: ${lat.toFixed(5)}<br>Lng: ${lng.toFixed(5)}`);
-            
-            console.log("Posisi baru tersimpan!");
-        } else {
-            alert("Gagal update posisi di server.");
-        }
-    } catch (error) {
-        console.error(error);
-        alert("Error koneksi saat geser marker.");
-    }
-}
-
-// --- FUNGSI READ (AMBIL DATA) ---
+// --- FUNGSI READ / AMBIL DATA (GET) ---
 async function loadLocations() {
     try {
-        const response = await fetch(`${API_URL}/api/map`);
+        const response = await fetch(`${API_URL}/api/map`, {
+            headers: {
+                "ngrok-skip-browser-warning": "true" // <--- SOLUSI ERROR NGROK
+            }
+        });
+        
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+            throw new Error("Ngrok memblokir akses atau Server Error. Cek Link!");
+        }
+
         const data = await response.json();
 
         coordinateList.innerHTML = "";
@@ -129,18 +97,19 @@ async function loadLocations() {
         }
 
         data.forEach(item => {
-            addMarkerToMap(item); // Panggil fungsi marker yang baru
+            addMarkerToMap(item);
             addToList(item);
         });
 
     } catch (error) {
         console.error(error);
-        coordinateList.innerHTML = "<p style='color:red; text-align:center;'>Gagal connect ke server.</p>";
+        coordinateList.innerHTML = `<p style='color:red; text-align:center;'>Gagal connect ke server.<br><small>${error.message}</small></p>`;
     }
 }
+// Panggil saat pertama buka
 loadLocations();
 
-// --- FUNGSI CREATE (SIMPAN) ---
+// --- FUNGSI CREATE (POST) ---
 let tempMarker = null;
 
 map.on("click", function (e) {
@@ -166,45 +135,57 @@ window.simpanKeDatabase = async function(lat, lng) {
     try {
         const response = await fetch(`${API_URL}/api/map`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                "ngrok-skip-browser-warning": "true" // <--- SOLUSI ERROR NGROK
+            },
             body: JSON.stringify(dataBaru)
         });
         const result = await response.json();
 
         if (response.ok) {
             map.closePopup();
-            const savedData = result.data; // Data lengkap dr server (ada ID)
-            
-            addMarkerToMap(savedData); // Langsung draggable
+            const savedData = result.data;
+            addMarkerToMap(savedData);
             addToList(savedData);
         } else {
             alert("Gagal menyimpan.");
         }
-    } catch (error) { alert("Error koneksi."); }
+    } catch (error) { 
+        console.error(error);
+        alert("Error koneksi."); 
+    }
 };
 
-// --- FUNGSI DELETE (HAPUS) ---
-window.hapusLokasi = async function(id) {
-    if(!confirm("Yakin mau menghapus lokasi ini?")) return;
-
+// --- FUNGSI UPDATE POSISI (PUT) ---
+async function updatePosisiMarker(id, lat, lng) {
     try {
         const response = await fetch(`${API_URL}/api/map/${id}`, {
-            method: 'DELETE'
+            method: 'PUT',
+            headers: { 
+                'Content-Type': 'application/json',
+                "ngrok-skip-browser-warning": "true" // <--- SOLUSI ERROR NGROK
+            },
+            body: JSON.stringify({ latitude: lat, longitude: lng })
         });
 
         if (response.ok) {
-            document.getElementById(`item-${id}`).remove();
-            if(markers[id]) {
-                map.removeLayer(markers[id]);
-                delete markers[id];
+            const posSpan = document.getElementById(`pos-${id}`);
+            if(posSpan) {
+                posSpan.innerHTML = `Lat: ${lat.toFixed(5)}<br>Lng: ${lng.toFixed(5)}`;
             }
+            const marker = markers[id];
+            const nama = document.getElementById(`nama-${id}`).innerText;
+            marker.setPopupContent(`<b>${nama}</b><br>Lat: ${lat.toFixed(5)}<br>Lng: ${lng.toFixed(5)}`);
         } else {
-            alert("Gagal menghapus.");
+            alert("Gagal update posisi.");
         }
-    } catch (error) { console.error(error); }
-};
+    } catch (error) {
+        console.error(error);
+    }
+}
 
-// --- FUNGSI UPDATE NAMA (EDIT) ---
+// --- FUNGSI UPDATE NAMA / EDIT (PUT) ---
 window.editLokasi = async function(id) {
     const namaLama = document.getElementById(`nama-${id}`).innerText;
     const namaBaru = prompt("Masukkan nama baru:", namaLama);
@@ -213,7 +194,10 @@ window.editLokasi = async function(id) {
         try {
             const response = await fetch(`${API_URL}/api/map/${id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    "ngrok-skip-browser-warning": "true" // <--- SOLUSI ERROR NGROK
+                },
                 body: JSON.stringify({ nama: namaBaru })
             });
 
@@ -229,6 +213,30 @@ window.editLokasi = async function(id) {
     }
 };
 
+// --- FUNGSI DELETE (DELETE) ---
+window.hapusLokasi = async function(id) {
+    if(!confirm("Yakin mau menghapus lokasi ini?")) return;
+
+    try {
+        const response = await fetch(`${API_URL}/api/map/${id}`, {
+            method: 'DELETE',
+            headers: {
+                "ngrok-skip-browser-warning": "true" // <--- SOLUSI ERROR NGROK
+            }
+        });
+
+        if (response.ok) {
+            document.getElementById(`item-${id}`).remove();
+            if(markers[id]) {
+                map.removeLayer(markers[id]);
+                delete markers[id];
+            }
+        } else {
+            alert("Gagal menghapus.");
+        }
+    } catch (error) { console.error(error); }
+};
+
 window.zoomKe = function(id) {
     const marker = markers[id];
     if (marker) {
@@ -237,7 +245,6 @@ window.zoomKe = function(id) {
     }
 };
 
-// LOGOUT
 document.getElementById('btnLogout').addEventListener('click', () => {
     localStorage.removeItem('user_sig');
     window.location.href = 'index.html';
