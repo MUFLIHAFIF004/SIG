@@ -121,7 +121,7 @@ window.simpanKeDatabase = async function(lat, lng) {
 
     try {
         // Kirim ke Backend Golang
-        const response = await fetch('http://localhost:3000/api/lokasi', {
+        const response = await fetch('https://muflihafif004.github.io/SIG/map.html', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(dataBaru)

@@ -52,7 +52,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     btn.disabled = true;
 
     try {
-        const response = await fetch('http://localhost:3000/api/login', {
+        const response = await fetch('https://muflihafif004.github.io/SIG/index.html', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password })
