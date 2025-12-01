@@ -63,7 +63,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         if (response.ok) {
             // SUKSES
             localStorage.setItem('user_sig', result.username);
-            window.location.href = 'peta.html';
+            window.location.href = 'map.html';
         } else {
             // GAGAL (Password/Username Salah dari Server)
             // Tampilkan pesan error dari Golang di bawah password
