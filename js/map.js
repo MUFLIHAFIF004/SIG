@@ -1,6 +1,6 @@
 // --- KONFIGURASI ---
 // GANTI DENGAN LINK NGROK KAMU YANG BARU:
-const API_URL = "https://bonnily-profanatory-jordynn.ngrok-free.dev/api/map"; 
+const API_URL = "https://bonnily-profanatory-jordynn.ngrok-free.dev"; 
 
 // 1. CEK LOGIN
 const username = localStorage.getItem('user_sig');
