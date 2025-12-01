@@ -52,7 +52,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     btn.disabled = true;
 
     try {
-        const response = await fetch('https://muflihafif004.github.io/SIG/index.html', {
+        const response = await fetch('https://bonnily-profanatory-jordynn.ngrok-free.dev/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password })

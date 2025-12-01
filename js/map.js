@@ -55,7 +55,7 @@ function addMarker(data) {
 // 3. LOAD DATA DARI BACKEND (Database)
 async function loadLocations() {
     try {
-        const response = await fetch('http://localhost:3000/api/lokasi');
+        const response = await fetch(' https://bonnily-profanatory-jordynn.ngrok-free.dev/api/map');
         const data = await response.json();
 
         // Bersihkan list dulu

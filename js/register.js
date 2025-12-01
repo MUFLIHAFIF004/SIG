@@ -54,7 +54,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     btn.disabled = true;
 
     try {
-        const response = await fetch('https://muflihafif004.github.io/SIG/register.html', {
+        const response = await fetch(' https://bonnily-profanatory-jordynn.ngrok-free.dev/api/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password })
