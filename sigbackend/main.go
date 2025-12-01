@@ -84,6 +84,9 @@ func main() {
 		// Simpan User Baru
 		_, err = collection.InsertOne(context.Background(), user)
 		if err != nil {
+
+			fmt.Println("❌ GAGAL PENYEBABNYA:", err)
+			
 			return c.Status(500).JSON(fiber.Map{"error": "Gagal daftar"})
 		}
 
