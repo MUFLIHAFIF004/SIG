@@ -1,0 +1,57 @@
+/* Reset */
+body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; }
+
+/* Layout Utama: Sidebar Kiri, Map Kanan */
+.container { display: flex; height: 100vh; width: 100%; }
+
+/* Gaya Sidebar */
+.sidebar {
+    width: 300px; /* Lebar panel kiri */
+    background-color: #1e293b;
+    border-right: 1px solid #334155;
+    display: flex;
+    flex-direction: column;
+    z-index: 2; /* Biar di atas peta */
+    box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+}
+
+.sidebar-header {
+    padding: 20px;
+    background-color: #0f172a;
+    border-bottom: 1px solid #334155;
+}
+
+.sidebar-header h3 { margin: 0 0 10px 0; color: #2dd4bf; }
+.user-info { font-size: 0.9rem; color: #94a3b8; }
+
+.coord-list {
+    flex: 1; /* Isi sisa ruang */
+    overflow-y: auto; /* Scroll kalau panjang */
+    padding: 10px;
+}
+
+/* Gaya Item di List */
+.coord-item {
+    background-color: #334155;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border-left: 4px solid #3b82f6; /* Aksen Biru */
+    font-size: 0.9rem;
+}
+.coord-item strong { display: block; color: white; margin-bottom: 4px; }
+.coord-item span { color: #94a3b8; font-size: 0.8rem; }
+
+/* Gaya Map */
+#map { flex: 1; height: 100%; }
+
+/* Tombol Logout Kecil */
+.btn-logout-small {
+    background: #ef4444; border: none; color: white; padding: 2px 8px;
+    border-radius: 4px; cursor: pointer; font-size: 0.8rem; margin-left: 10px;
+}
+
+/* Popup Form */
+.popup-header { font-weight: bold; color: #0f172a; margin-bottom: 5px; }
+.popup-input { width: 100%; padding: 5px; margin: 5px 0; box-sizing: border-box; }
+.btn-save { background: #14b8a6; color: white; border: none; width: 100%; padding: 5px; cursor: pointer; border-radius: 4px; }

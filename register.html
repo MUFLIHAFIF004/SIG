@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Akun - Aplikasi SIG</title>
+    
+    <link rel="stylesheet" href="css/registes.css">
+</head>
+<body>
+
+<div class="card">
+    <h2>Daftar Akun Baru</h2>
+    <form id="registerForm">
+        
+        <div class="input-group">
+            <label for="username">Buat Username</label>
+            <input type="text" id="username" placeholder="Masukkan username baru" autocomplete="off">
+            <small id="usernameError" class="error-text"></small>
+        </div>
+        
+        <div class="input-group">
+            <label for="password">Buat Password</label>
+            <input type="password" id="password" placeholder="Masukkan password baru">
+            <small id="passwordError" class="error-text"></small>
+        </div>
+
+        <button type="submit">Daftar Sekarang</button>
+    </form>
+
+    <div class="link">
+        Sudah punya akun? <a href="index.html">Login di sini</a>
+    </div>
+</div>
+
+<script src="js/register.js"></script>
+
+</body>
+</html>

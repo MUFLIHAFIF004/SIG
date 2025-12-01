@@ -1,4 +1,6 @@
-/* Reset dasar */
+/* --- docs/register.css (Disamakan dengan style.css) --- */
+
+/* 1. Reset Dasar */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #0f172a; /* Latar belakang gelap (Dark Blue) */
@@ -10,14 +12,14 @@ body {
     color: #e2e8f0; /* Warna teks putih abu-abu */
 }
 
-/* Kartu Login */
+/* 2. Kartu (Bentuk dan Ukuran SAMA dengan Login) */
 .card {
-    background-color: #1e293b; /* Warna kartu sedikit lebih terang */
+    background-color: #1e293b;
     padding: 2rem;
     border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Bayangan gelap */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     width: 100%;
-    max-width: 350px;
+    max-width: 350px; /* Lebar sama dengan login */
     text-align: center;
 }
 
@@ -27,7 +29,7 @@ h2 {
     font-weight: 700;
 }
 
-/* Label Input */
+/* 3. Label & Input */
 .input-group {
     text-align: left;
     margin-bottom: 15px;
@@ -40,7 +42,7 @@ label {
     color: #94a3b8;
 }
 
-/* Kotak Input */
+/* 4. Kotak Input */
 input {
     width: 100%;
     padding: 12px;
@@ -48,13 +50,14 @@ input {
     border: 1px solid #475569;
     border-radius: 6px;
     color: white;
-    box-sizing: border-box; /* Agar padding tidak merusak lebar */
+    box-sizing: border-box;
     outline: none;
     transition: 0.3s;
 }
 
+/* Fokus Warna HIJAU TOSKA (Sama kayak Login) */
 input:focus {
-    border-color: #2dd4bf; /* Warna border saat diklik (Teal) */
+    border-color: #2dd4bf; 
     box-shadow: 0 0 0 2px rgba(45, 212, 191, 0.2);
 }
 
@@ -62,13 +65,13 @@ input::placeholder {
     color: #64748b;
 }
 
-/* Tombol Masuk */
+/* 5. Tombol (Warna HIJAU TOSKA - Sama kayak Login) */
 button {
     width: 100%;
     padding: 12px;
     margin-top: 20px;
-    background-color: #14b8a6; /* Warna tombol Hijau Toska/Teal */
-    color: #0f172a; /* Teks tombol gelap biar kontras */
+    background-color: #14b8a6; /* Hijau Toska */
+    color: #0f172a; /* Teks gelap biar kontras */
     border: none;
     border-radius: 6px;
     font-weight: bold;
@@ -78,7 +81,7 @@ button {
 }
 
 button:hover {
-    background-color: #0d9488; /* Warna saat di-hover */
+    background-color: #0d9488; /* Hijau lebih gelap saat hover */
 }
 
 button:disabled {
@@ -86,7 +89,7 @@ button:disabled {
     cursor: not-allowed;
 }
 
-/* Link Daftar */
+/* 6. Link (Warna HIJAU TOSKA - Sama kayak Login) */
 .link {
     margin-top: 20px;
     font-size: 0.9rem;
@@ -102,14 +105,16 @@ button:disabled {
     text-decoration: underline;
 }
 
+/* 7. Validasi Error (Wajib ada) */
 .error-text {
-    color: #ef4444; /* Warna Merah */
+    color: #ef4444; /* Merah */
     font-size: 0.85rem;
     margin-top: 5px;
     display: block;
     min-height: 20px;
 }
+
 input.input-error {
-    border-color: #ef4444 !important; 
+    border-color: #ef4444 !important;
     background-color: #450a0a;
 }
