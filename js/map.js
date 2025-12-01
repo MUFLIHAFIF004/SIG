@@ -6,8 +6,8 @@ if (!username) {
     document.getElementById('userNameDisplay').innerText = username;
 }
 
-// 2. INISIALISASI PETA
-// Set view ke Bandung (sesuai kodingan lamamu)
+// 2. INISIALISASI MAP
+// Set view ke Bandung
 const map = L.map("map").setView([-6.914744, 107.60981], 13);
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -36,7 +36,7 @@ function addToList(data) {
         <span>Lng: ${data.longitude.toFixed(5)}</span>
     `;
 
-    // (Opsional) Klik item di list -> Peta zoom ke lokasi
+    // (Opsional) Klik item di list -> Map zoom ke lokasi
     item.addEventListener('click', () => {
         map.setView([data.latitude, data.longitude], 16);
     });
@@ -45,7 +45,7 @@ function addToList(data) {
     coordinateList.prepend(item);
 }
 
-// Fungsi: Menambahkan Marker ke Peta
+// Fungsi: Menambahkan Marker ke Map
 function addMarker(data) {
     L.marker([data.latitude, data.longitude])
         .addTo(map)
@@ -55,7 +55,8 @@ function addMarker(data) {
 // 3. LOAD DATA DARI BACKEND (Database)
 async function loadLocations() {
     try {
-        const response = await fetch(' https://bonnily-profanatory-jordynn.ngrok-free.dev/api/map');
+        // PERBAIKAN: Hapus spasi di depan https dan ganti endpoint jadi /api/map
+        const response = await fetch('https://bonnily-profanatory-jordynn.ngrok-free.dev/api/map');
         const data = await response.json();
 
         // Bersihkan list dulu
@@ -68,7 +69,7 @@ async function loadLocations() {
 
         // Loop data dari database
         data.forEach(item => {
-            addMarker(item); // Taruh di Peta
+            addMarker(item); // Taruh di Map
             addToList(item); // Taruh di List Kiri
         });
 
@@ -81,7 +82,7 @@ async function loadLocations() {
 // Panggil saat pertama buka
 loadLocations();
 
-// 4. INTERAKSI: KLIK PETA UNTUK TAMBAH DATA
+// 4. INTERAKSI: KLIK MAP UNTUK TAMBAH DATA
 let tempMarker = null;
 
 map.on("click", function (e) {
@@ -120,8 +121,10 @@ window.simpanKeDatabase = async function(lat, lng) {
     };
 
     try {
-        // Kirim ke Backend Golang
-        const response = await fetch('https://muflihafif004.github.io/SIG/map.html', {
+        // PERBAIKAN PENTING:
+        // Jangan fetch ke github.io, tapi ke Ngrok Backend!
+        // Dan endpoint diganti jadi /api/map
+        const response = await fetch('https://bonnily-profanatory-jordynn.ngrok-free.dev/api/map', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(dataBaru)

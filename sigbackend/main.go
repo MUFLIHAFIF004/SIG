@@ -22,11 +22,11 @@ type User struct {
 	Password string `json:"password" bson:"password"` // Catatan: Di aplikasi asli, password wajib di-enkripsi!
 }
 
-// Model untuk Lokasi Peta
+// Model untuk Lokasi Map
 type LocationData struct {
-	Nama      string    `json:"nama" bson:"nama"`
-	Latitude  float64   `json:"latitude" bson:"latitude"`
-	Longitude float64   `json:"longitude" bson:"longitude"`
+	Nama      string  `json:"nama" bson:"nama"`
+	Latitude  float64 `json:"latitude" bson:"latitude"`
+	Longitude float64 `json:"longitude" bson:"longitude"`
 }
 
 var db *mongo.Database
@@ -84,9 +84,7 @@ func main() {
 		// Simpan User Baru
 		_, err = collection.InsertOne(context.Background(), user)
 		if err != nil {
-
 			fmt.Println("❌ GAGAL PENYEBABNYA:", err)
-			
 			return c.Status(500).JSON(fiber.Map{"error": "Gagal daftar"})
 		}
 
@@ -118,23 +116,28 @@ func main() {
 
 	// === FITUR 2: MAPS (Lokasi) ===
 
-	// API: Simpan Lokasi
-	app.Post("/api/lokasi", func(c *fiber.Ctx) error {
+	// API: Simpan Lokasi Map
+	// (Ganti route jadi /api/map)
+	app.Post("/api/map", func(c *fiber.Ctx) error {
 		lokasi := new(LocationData)
 		if err := c.BodyParser(lokasi); err != nil {
+			fmt.Println("❌ Error Parsing Data:", err)
 			return c.Status(400).SendString(err.Error())
 		}
 		
 		_, err := db.Collection("lokasi").InsertOne(context.Background(), lokasi)
 		if err != nil {
+			fmt.Println("❌ Error Simpan MongoDB:", err)
 			return c.Status(500).SendString("Gagal simpan lokasi")
 		}
 
+		fmt.Println("📍 Data Baru Tersimpan:", lokasi.Nama)
 		return c.JSON(fiber.Map{"message": "Lokasi disimpan!", "data": lokasi})
 	})
 
-	// API: Ambil Semua Lokasi
-	app.Get("/api/lokasi", func(c *fiber.Ctx) error {
+	// API: Ambil Semua Lokasi Map
+	// (Ganti route jadi /api/map)
+	app.Get("/api/map", func(c *fiber.Ctx) error {
 		var hasil []LocationData
 		cursor, err := db.Collection("lokasi").Find(context.Background(), bson.M{})
 		if err != nil {
