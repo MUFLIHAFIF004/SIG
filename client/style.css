@@ -1,0 +1,173 @@
+/* Modernized styles, improved spacing, card UI and scrollable coord-list */
+
+:root{
+  --bg-1: #0f1724;
+  --bg-2: #082033;
+  --card-bg: rgba(255,255,255,0.03);
+  --muted: #9fb0c6;
+  --text: #eaf4ff;
+  --accent: #2bb7a4;
+  --danger: #e05a5a;
+  --glass: rgba(255,255,255,0.02);
+  --radius: 12px;
+  --container-max: 1180px;
+  --shadow-1: 0 8px 30px rgba(2,6,23,0.6);
+}
+
+/* Reset / base */
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;color:var(--text);background:linear-gradient(135deg,var(--bg-1),var(--bg-2));-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+a,button,input,textarea{font-family:inherit}
+
+/* Layout container */
+.container{
+  max-width:var(--container-max);
+  margin:28px auto;
+  display:flex;
+  gap:24px;
+  padding:18px;
+  align-items:stretch;
+}
+
+/* Left column - convert to nice card */
+.login-section{
+  width:360px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius:var(--radius);
+  padding:20px;
+  box-shadow: var(--shadow-1), inset 0 1px rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.03);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  min-height:420px;
+  /* allow children to shrink properly */
+  min-width:0;
+}
+
+/* Title */
+.login-section h2{
+  margin:0;
+  font-size:20px;
+  color:var(--text);
+  text-align:center;
+  font-weight:700;
+}
+
+/* Form layout */
+form#loginForm{ display:flex;flex-direction:column; gap:10px; padding:4px 2px; }
+label{ font-size:13px; color:var(--muted); margin-bottom:4px; display:block; }
+input[type="text"], input[type="password"]{
+  width:100%;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.04);
+  background:var(--glass);
+  color:var(--text);
+  outline:none;
+  transition: box-shadow .12s, transform .08s, border-color .12s;
+}
+input[type="text"]::placeholder, input[type="password"]::placeholder{ color: rgba(255,255,255,0.35); }
+input[type="text"]:focus, input[type="password"]:focus{
+  box-shadow: 0 8px 20px rgba(43,184,156,0.08);
+  border-color: rgba(43,184,156,0.18);
+  transform: translateY(-1px);
+}
+
+/* Primary button */
+.login-section button{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  padding:10px 12px; border-radius:10px; border:none; cursor:pointer;
+  background: linear-gradient(90deg,var(--accent), #26a58f);
+  color:#002422; font-weight:700;
+  box-shadow: 0 10px 24px rgba(43,184,156,0.12);
+  transition: transform .12s, box-shadow .12s, opacity .12s;
+}
+.login-section button:hover{ transform: translateY(-3px); box-shadow: 0 18px 36px rgba(43,184,156,0.16); }
+.login-section button:active{ transform: translateY(0); }
+
+/* Login message */
+#loginMessage{ text-align:center; color:#ffd7a8; font-weight:600; min-height:20px; font-size:13px; }
+
+/* Daftar titik header */
+.login-section h3{ margin:8px 0 4px 0; font-size:14px; color:var(--muted); }
+
+/* Coordinate list: make it scroll inside the card */
+.coord-list{
+  /* allow flex child to shrink and let overflow work */
+  flex: 1 1 auto;
+  min-height: 0;           /* critical for scroll inside flex */
+  max-height: 260px;       /* adjust as needed */
+  overflow-y: auto;
+  padding:8px;
+  border-radius:8px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+  border: 1px dashed rgba(255,255,255,0.02);
+}
+
+/* coord item */
+.coord-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px;
+  gap:12px;
+  border-radius:8px;
+  background: rgba(255,255,255,0.01);
+  transition: transform .08s, background .12s;
+  margin-bottom:8px;
+}
+.coord-item:hover{ transform: translateY(-4px); background: rgba(255,255,255,0.015); }
+.coord-item strong{ display:block; font-size:14px; color:var(--text); font-weight:700; }
+.coord-item div > div { font-size:12px; color:var(--muted); margin-top:4px; }
+
+/* action buttons */
+.coord-actions button{
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.03);
+  color: var(--muted);
+  padding:6px 8px;
+  border-radius:8px;
+  cursor:pointer;
+}
+.coord-actions button:hover{ background: rgba(255,255,255,0.02); color:var(--text); border-color: rgba(255,255,255,0.06); }
+
+/* right column: map panel */
+.map-section{
+  flex: 1 1 auto;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+#map{
+  height: calc(100vh - 76px); /* account roughly for margins; adjust if needed */
+  border-radius:var(--radius);
+  overflow:hidden;
+  border: 1px solid rgba(255,255,255,0.03);
+  box-shadow: var(--shadow-1);
+  background: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.04));
+}
+
+/* Smaller screens: stack and adjust heights */
+@media (max-width: 900px){
+  .container{ flex-direction:column; padding:12px; }
+  .login-section{ width:100%; min-height:220px; order:0; }
+  .map-section{ order:1; }
+  #map{ height: 54vh; }
+}
+
+/* Scrollbar styling (WebKit) */
+.coord-list::-webkit-scrollbar{ width:10px; }
+.coord-list::-webkit-scrollbar-track{ background: transparent; }
+.coord-list::-webkit-scrollbar-thumb{
+  background: rgba(255,255,255,0.05);
+  border-radius:10px;
+  border: 2px solid transparent; background-clip: padding-box;
+}
+.coord-list::-webkit-scrollbar-thumb:hover{ background: rgba(255,255,255,0.08); }
+
+/* Accessibility / niceties */
+button, input{ font-family:inherit; font-size:14px; }
+:focus{ outline: 3px solid rgba(43,184,156,0.12); outline-offset:2px; }
+
+/* End of style.css */
